@@ -1,0 +1,20 @@
+{
+  "name": "Mjolken-voting",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mjolken/Mjolken-voting.git"
+  },
+  "author": "David Marby <david@dmarby.se> (http://dmarby.se)",
+  "dependencies": {
+    "express": "^4.8.2",
+    "socket.io": "^1.0.6",
+    "moment": "^2.8.3",
+    "cookie": "^0.1.2"
+  }
+}
