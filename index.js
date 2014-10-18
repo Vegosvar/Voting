@@ -38,6 +38,8 @@ io.on('connection', function (socket) {
   socket.emit('votes', votes)
   var voted = false;
   if (cookies != null) {
+    console.log('RecentVoters: %s', recentVoters.indexOf(cookies._ga) > 1)
+    console.log('RecentVoterIPs: %s', recentVoterIPs[clientIp] != null)
     voted = (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
   }
   console.log('clientIP: %s', clientIp);
