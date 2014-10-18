@@ -39,13 +39,14 @@ io.on('connection', function (socket) {
   socket.emit('initial', { voted: (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) })
   socket.on('vote', function (data) {
     if (cookies == null || cookies._ga == null || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
-      return socket.emit('voteresult', false)
+      return socket.emit('voteresult', { error: 'You have already voted' })
     }
     recentVoterIPs[clientIp] = { ts: new Date(), vote: data.vote }
     recentVoters.push(cookies._ga);
     detailedVotes.push({ ts: new Date(), ip: clientIp, vote: data.vote, ga: cookies._ga })
     votes[data.vote]++
     socket.emit('votes', votes)
+    socket.emit('voteresult', { error: false})
   })
 })
 
