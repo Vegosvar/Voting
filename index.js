@@ -42,7 +42,8 @@ io.on('connection', function (socket) {
   }
   console.log('clientIP: %s', clientIp);
   console.log('Voted: %s', voted);
-  console.log('Cookies: %s', cookies);
+  console.log('Cookies:')
+  console.log(cookies);
   socket.emit('initial', { voted: voted })
   socket.on('vote', function (data) {
     if (cookies == null || cookies._ga == null || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
