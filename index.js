@@ -36,7 +36,14 @@ io.on('connection', function (socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address
   var cookies = socket.handshake.headers.cookie ? cookie.parse(socket.handshake.headers.cookie) : null
   socket.emit('votes', votes)
-  socket.emit('initial', { voted: (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) })
+  if (cookies == null) {
+    var voted = false;
+  } else {
+    var voted = (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
+  }
+  console.log('clientIP: %s', clientIp);
+  console.log('Voted: %s', voted);
+  socket.emit('initial', { voted: voted })
   socket.on('vote', function (data) {
     if (cookies == null || cookies._ga == null || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
       return socket.emit('voteresult', { error: 'You have already voted' })
