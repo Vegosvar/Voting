@@ -36,7 +36,7 @@ io.on('connection', function (socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address
   var cookies = socket.handshake.headers.cookie ? cookie.parse(socket.handshake.headers.cookie) : {}
   socket.emit('votes', votes)
-  var voted = cookies._ga == null || ? true : (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
+  var voted = cookies._ga == null ? true : (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
   console.log('RecentVoters: %s', recentVoters.indexOf(cookies._ga) > -1)
   console.log('RecentVoterIPs: %s', recentVoterIPs[clientIp] != null)
   console.log('clientIP: %s', clientIp);
