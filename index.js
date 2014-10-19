@@ -36,20 +36,22 @@ io.on('connection', function (socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address
   var cookies = socket.handshake.headers.cookie ? cookie.parse(socket.handshake.headers.cookie) : {}
   socket.emit('votes', votes)
-  var voted = cookies._ga == null ? true : (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
-  console.log('RecentVoters: %s', recentVoters.indexOf(cookies._ga) > -1)
+  var voted = cookies.hasVoted == true || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null
+ /* console.log('RecentVoters: %s', recentVoters.indexOf(cookies._ga) > -1)
   console.log('RecentVoterIPs: %s', recentVoterIPs[clientIp] != null)
   console.log('clientIP: %s', clientIp);
   console.log('Voted: %s', voted);
   console.log('Cookies:')
-  console.log(cookies);
+  console.log(cookies);*/
   socket.emit('initial', { voted: voted })
   socket.on('vote', function (data) {
-    if (cookies._ga == null || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
+    if (cookies.hasVoted == true || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
       return socket.emit('voteresult', { error: 'You have already voted' })
     }
     recentVoterIPs[clientIp] = { ts: new Date(), vote: data.vote }
-    recentVoters.push(cookies._ga);
+    if (cookies._ga != null) {
+      recentVoters.push(cookies._ga);
+    }
     detailedVotes.push({ ts: new Date(), ip: clientIp, vote: data.vote, ga: cookies._ga })
     votes[data.vote]++
     socket.emit('votes', votes)
