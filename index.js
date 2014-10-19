@@ -34,21 +34,18 @@ app.all('*', function (req, res, next) {
 
 io.on('connection', function (socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address
-  var cookies = socket.handshake.headers.cookie ? cookie.parse(socket.handshake.headers.cookie) : null
+  var cookies = socket.handshake.headers.cookie ? cookie.parse(socket.handshake.headers.cookie) : {}
   socket.emit('votes', votes)
-  var voted = false;
-  if (cookies != null) {
-    console.log('RecentVoters: %s', recentVoters.indexOf(cookies._ga) > -1)
-    console.log('RecentVoterIPs: %s', recentVoterIPs[clientIp] != null)
-    voted = (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
-  }
+  var voted = cookies._ga == null || ? true : (recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null) 
+  console.log('RecentVoters: %s', recentVoters.indexOf(cookies._ga) > -1)
+  console.log('RecentVoterIPs: %s', recentVoterIPs[clientIp] != null)
   console.log('clientIP: %s', clientIp);
   console.log('Voted: %s', voted);
   console.log('Cookies:')
   console.log(cookies);
   socket.emit('initial', { voted: voted })
   socket.on('vote', function (data) {
-    if (cookies == null || cookies._ga == null || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
+    if (cookies._ga == null || recentVoters.indexOf(cookies._ga) > -1 || recentVoterIPs[clientIp] != null || data == null || data.vote == null || (data.vote != 'yes' && data.vote != 'no' && data.vote != 'maybe')) {
       return socket.emit('voteresult', { error: 'You have already voted' })
     }
     recentVoterIPs[clientIp] = { ts: new Date(), vote: data.vote }
@@ -64,7 +61,7 @@ setInterval(function () {
   io.emit('votes', votes)
   Object.keys(recentVoterIPs).forEach(function (voter) {
     var item = recentVoterIPs[voter]
-    if (moment(new Date()).diff(item.ts, 'seconds') > 30) {
+    if (moment(new Date()).diff(item.ts, 'seconds') > 120) {
       delete recentVoterIPs[voter]
     }
   })
