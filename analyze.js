@@ -4,13 +4,27 @@ var ipCount = {}
 var gaCount = {}
 var combinedGaAndIPCount = {}
 
+var yesCount = 0
+var noCount = 0
+var maybeCount = 0
+var totalCount = 0
+
 // Todo, compare subnets?
 
 votes.forEach(function (vote) {
   if (ipCount[vote.ip] == null) {
-    ipCount[vote.ip] = 1
+    ipCount[vote.ip] = { count: 1, votes: [vote.vote] }
   } else {
-    ipCount[vote.ip]++
+    ipCount[vote.ip].count++
+    ipCount[vote.ip].votes.push(vote.vote)
+    if (vote.vote == 'yes') {
+      yesCount++
+    } else if (vote.vote == 'maybe') {
+      maybeCount++
+    } else if (vote.vote == 'no') {
+      noCount++
+    }
+    totalCount++
   }
   if (gaCount[vote.ga] == null) {
     gaCount[vote.ga] = 1
@@ -23,8 +37,8 @@ var ipCountList = []
 var gaCountList = []
 
 Object.keys(ipCount).forEach(function (ip) {
-  if (ipCount[ip] > 1) {
-    ipCountList.push({ ip: ip, count: ipCount[ip] })
+  if (ipCount[ip].count > 1) {
+    ipCountList.push({ ip: ip, count: ipCount[ip].count, votes: ipCount[ip].votes })
   }
 })
 
@@ -44,5 +58,9 @@ gaCountList.sort(function compare(a, b) {
 
 console.log('ipCount')
 console.log(ipCountList)
+console.log('noCount: %s', noCount)
+console.log('yesCount: %s', yesCount)
+console.log('maybeCount: %s', maybeCount)
+console.log('totalCount: %s', totalCount)
 console.log('gaCount')
 console.log(gaCountList)
