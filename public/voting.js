@@ -55,8 +55,8 @@ var Voting = {
     Object.keys(data.choices).forEach(function (choice) {
       var percentage = Math.floor(data.choices[choice] / data.total * 100) || 0
 
-      $(Voting.config.choices[choice].result).css('height', percentage + '%')
-      $(Voting.config.choices[choice].result_percentage).text(percentage + '%')
+      $(Voting.config.choices[choice].result).css('height', value + '%')
+      $(Voting.config.choices[choice].result_percentage).text(Voting.config.no_percentages ? data.choices[choice] : (percentage + '%'))
     })
   }
 }
