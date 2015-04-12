@@ -1,6 +1,7 @@
 {
-  "name": "Mjolken-voting",
+  "name": "Voting",
   "version": "0.0.1",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -8,13 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mjolken/Mjolken-voting.git"
+    "url": "https://github.com/Vegosvar/Voting.git"
   },
   "author": "David Marby <david@dmarby.se> (http://dmarby.se)",
   "dependencies": {
+    "cookie": "^0.1.2",
+    "cors": "^2.5.3",
     "express": "^4.8.2",
-    "socket.io": "^1.0.6",
     "moment": "^2.8.3",
-    "cookie": "^0.1.2"
+    "socket.io": "^1.0.6"
   }
 }
