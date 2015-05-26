@@ -72,7 +72,7 @@ io.on('connection', function (socket) {
   }
 
   var has_voted = function () {
-    if (client.cookies.hasVoted == true || recent_votes[client.id].indexOf(client.cookies._ga) > -1 || recent_ips[client.id][client.ip] != null) {
+    if ((client.cookies && (client.cookies.hasVoted == true || (recent_votes[client.id] && recent_votes[client.id].indexOf(client.cookies._ga) > -1))) || recent_ips[client.id][client.ip] != null) {
       client.voted = true
     }
   }
